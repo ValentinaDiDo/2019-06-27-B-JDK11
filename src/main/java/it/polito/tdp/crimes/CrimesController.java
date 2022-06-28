@@ -5,6 +5,7 @@
 package it.polito.tdp.crimes;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -41,7 +42,7 @@ public class CrimesController {
     private Button btnAnalisi; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxArco"
-    private ComboBox<String> boxArco; // Value injected by FXMLLoader
+    private ComboBox<Adiacenze> boxArco; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnPercorso"
     private Button btnPercorso; // Value injected by FXMLLoader
@@ -76,20 +77,23 @@ public class CrimesController {
     				sum += a.getPeso();
     			}
     		}
+    		List<Adiacenze> adiacenzeMigliori = new ArrayList<>();
     		double media = sum / archi;
+    		txtResult.appendText("\n- - MEDIA : "+media+"- -\n");
     		for(Adiacenze a : adiacenze) {
     			if(a.getPeso() >= media) {
     				txtResult.appendText("\n"+a.toString());
+    				adiacenzeMigliori.add(a);
     			}
     		}
     		this.boxArco.getItems().clear();
-    		this.boxArco.getItems().addAll(this.grafo.vertexSet());
+    		this.boxArco.getItems().addAll(adiacenzeMigliori);
     		
     	}
     }
     
     @FXML
-    void doCalcolaPercorso(ActionEvent event) {
+    void doCalcolaPercorso(ActionEvent event) throws InterruptedException {
     	txtResult.clear();
     	txtResult.appendText("Calcola percorso...\n");
     	if(this.grafoCreato == false) {
@@ -98,6 +102,13 @@ public class CrimesController {
     		txtResult.appendText("seleziona un arco");
     	}else {
     		//ricerca ricorsiva
+    		txtResult.setText("cerco percorso");
+    		Adiacenze scelta = this.boxArco.getValue();
+    		this.model.calcolaPercorso(scelta);
+    		List<String> best = this.model.getBest();
+    		for(String v : best) {
+    			txtResult.appendText("\n"+v);
+    		}
     		
     	}
     }

@@ -21,7 +21,7 @@ public class Adiacenze {
 	}
 	@Override
 	public String toString() {
-		return crime1+ " " + crime2 +" " + peso;
+		return crime1+ " - " + crime2 +" (" + peso+")";
 	}
 	
 	
